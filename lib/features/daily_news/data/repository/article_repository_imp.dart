@@ -5,13 +5,16 @@ import 'package:retrofit/dio.dart';
 
 import '../../../../core/resources/data_state.dart';
 import '../../../../core/utils/consts.dart';
+import '../../domain/entities/article_entity.dart';
 import '../models/article_model.dart';
 import '../../domain/repository/article_repository.dart';
+import '../sources/local/app_database.dart';
 import '../sources/remote/news_api_service.dart';
 
 class ArticleRepositoryImp extends ArticleRepository {
-  ArticleRepositoryImp(this._newsApiService);
+  ArticleRepositoryImp(this._newsApiService, this._appDatabase);
   final NewsApiService _newsApiService;
+  final AppDatabase _appDatabase;
 
   @override
   Future<DataState<List<ArticleModel>>> getNewsArticles() async {
@@ -37,5 +40,22 @@ class ArticleRepositoryImp extends ArticleRepository {
     } on DioException catch (e) {
       return DataFailer<List<ArticleModel>>(e);
     }
+  }
+
+  @override
+  Future<List<ArticleEntity>> getSavedArticles() {
+    return _appDatabase.articleDAO.getArticles();
+  }
+
+  @override
+  Future<void> removeArticle(ArticleEntity article) {
+    return _appDatabase.articleDAO
+        .deleteArticle(ArticleModel.fromEntity(article));
+  }
+
+  @override
+  Future<void> saveArticle(ArticleEntity article) {
+    return _appDatabase.articleDAO
+        .insertArticle(ArticleModel.fromEntity(article));
   }
 }

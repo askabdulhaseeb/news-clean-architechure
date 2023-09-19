@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../domain/entities/article_entity.dart';
-import '../provider/article/remote/remote_article_provider.dart';
+import '../providers/remote/remote_article_provider.dart';
 import '../widgets/article_tile.dart';
 
 class DailyNewsScreen extends StatelessWidget {
@@ -28,11 +28,18 @@ class DailyNewsScreen extends StatelessWidget {
           final List<ArticleEntity> artciles = raPro.artciles;
           return ListView.builder(
             itemCount: artciles.length,
-            itemBuilder: (BuildContext context, int index) =>
-                ArticleTile(artciles[index]),
+            itemBuilder: (BuildContext context, int index) => ArticleTile(
+              artciles[index],
+              onArticlePressed: (ArticleEntity article) =>
+                  _onArticlePressed(context, article),
+            ),
           );
         }
       },
     );
+  }
+
+  void _onArticlePressed(BuildContext context, ArticleEntity article) {
+    Navigator.pushNamed(context, '/ArticleDetails', arguments: article);
   }
 }

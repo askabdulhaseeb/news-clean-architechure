@@ -1,5 +1,8 @@
+import 'package:floor/floor.dart';
+
 import '../../domain/entities/article_entity.dart';
 
+@Entity(tableName: 'article', primaryKeys: <String>['id'])
 class ArticleModel extends ArticleEntity {
   const ArticleModel({
     int? id,
@@ -24,6 +27,7 @@ class ArticleModel extends ArticleEntity {
   factory ArticleModel.fromJson(Map<String, dynamic> map) {
     print(map['author'] ?? 'author');
     return ArticleModel(
+      id: map['id'] ?? '',
       author: map['author'] ?? '',
       title: map['title'] ?? '',
       description: map['description'] ?? '',
@@ -31,6 +35,19 @@ class ArticleModel extends ArticleEntity {
       urlToImage: map['urlToImage'] ?? '',
       publishedAt: map['publishedAt'] ?? '',
       content: map['content'] ?? '',
+    );
+  }
+
+  factory ArticleModel.fromEntity(ArticleEntity entity) {
+    return ArticleModel(
+      id: entity.id,
+      author: entity.author,
+      title: entity.title,
+      description: entity.description,
+      url: entity.url,
+      urlToImage: entity.urlToImage,
+      publishedAt: entity.publishedAt,
+      content: entity.content,
     );
   }
 }

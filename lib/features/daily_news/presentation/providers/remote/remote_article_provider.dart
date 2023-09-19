@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/resources/data_state.dart';
-import '../../../../domain/entities/article_entity.dart';
-import '../../../../domain/usercases/get_acticle.dart';
+import '../../../../../core/resources/data_state.dart';
+import '../../../domain/entities/article_entity.dart';
+import '../../../domain/usercases/get_acticle.dart';
 
 class RemoteArticleProvider extends ChangeNotifier {
   RemoteArticleProvider(this._getArticleUseCase) {
