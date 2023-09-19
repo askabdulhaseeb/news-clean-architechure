@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:nested/nested.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+import 'features/daily_news/domain/usercases/get_acticle.dart';
+import 'features/daily_news/presentation/pages/daily_news.dart';
+import 'features/daily_news/presentation/provider/article/remote/remote_article_provider.dart';
+import 'injection_container.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initDependencies();
   runApp(const MyApp());
 }
 
@@ -9,13 +18,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'News App - Clean Architechure',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider<RemoteArticleProvider>(
+          create: (_) => RemoteArticleProvider(getIt<GetArticleUseCase>()),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'News App - Clean Architechure',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const DailyNewsScreen(),
       ),
-      home: const Scaffold(body: Center(child: Text('Init'))),
     );
   }
 }

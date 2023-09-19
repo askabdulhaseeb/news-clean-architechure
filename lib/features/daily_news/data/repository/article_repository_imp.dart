@@ -19,7 +19,6 @@ class ArticleRepositoryImp extends ArticleRepository {
       final HttpResponse<List<ArticleModel>> httpResponce =
           await _newsApiService.getNewsAtricles(
         apiKey: apiKey,
-        category: 'general',
         country: 'us',
       );
 
