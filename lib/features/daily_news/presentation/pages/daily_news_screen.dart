@@ -10,7 +10,15 @@ class DailyNewsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('DailyNewsScreen')),
+      appBar: AppBar(
+        title: const Text('Daily News'),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () => _onSavedPressed(context),
+            icon: const Icon(Icons.bookmark_added),
+          )
+        ],
+      ),
       body: _body(),
     );
   }
@@ -41,5 +49,9 @@ class DailyNewsScreen extends StatelessWidget {
 
   void _onArticlePressed(BuildContext context, ArticleEntity article) {
     Navigator.pushNamed(context, '/ArticleDetails', arguments: article);
+  }
+
+  void _onSavedPressed(BuildContext context) {
+    Navigator.pushNamed(context, '/SavedArticles');
   }
 }

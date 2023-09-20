@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:provider/provider.dart';
 import '../../domain/entities/article_entity.dart';
+import '../providers/local/local_article_provider.dart';
 
 class ArticleDetailScreen extends HookWidget {
   const ArticleDetailScreen({Key? key, this.article}) : super(key: key);
@@ -94,7 +96,7 @@ class ArticleDetailScreen extends HookWidget {
     return Builder(
       builder: (BuildContext context) => FloatingActionButton(
         onPressed: () => _onFloatingActionButtonPressed(context),
-        child: const Icon(Icons.bookmark, color: Colors.white),
+        child: const Icon(Icons.bookmark_add, color: Colors.black),
       ),
     );
   }
@@ -104,7 +106,8 @@ class ArticleDetailScreen extends HookWidget {
   }
 
   void _onFloatingActionButtonPressed(BuildContext context) {
-    // On Save
+    Provider.of<LocalArticleProvider>(context, listen: false)
+        .onSaveArticle(article!);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: Colors.black,

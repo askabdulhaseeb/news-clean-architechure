@@ -42,8 +42,9 @@ class SavedArticlesScreen extends HookWidget {
           return const Center(child: CupertinoActivityIndicator());
         } else if (laPro.articles.isNotEmpty) {
           return _buildArticlesList(laPro.articles);
+        } else {
+          return const Center(child: Text('EMPTY'));
         }
-        return const Center(child: Text('EMPTY'));
       },
     );
   }
