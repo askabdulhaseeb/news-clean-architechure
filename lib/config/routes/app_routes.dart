@@ -6,7 +6,7 @@ import '../../features/daily_news/presentation/pages/daily_news_screen.dart';
 import '../../features/daily_news/presentation/pages/saved_article_screen.dart';
 
 class AppRoutes {
-  static Route onGenerateRoutes(RouteSettings settings) {
+  static Route<dynamic> onGenerateRoutes(RouteSettings settings) {
     switch (settings.name) {
       case '/':
         return _materialRoute(const DailyNewsScreen());

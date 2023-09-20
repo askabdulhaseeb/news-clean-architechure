@@ -25,7 +25,7 @@ class _$AppDatabaseBuilder {
 
   final String? name;
 
-  final List<Migration> _migrations = [];
+  final List<Migration> _migrations = <Migration>[];
 
   Callback? _callback;
 
@@ -43,10 +43,10 @@ class _$AppDatabaseBuilder {
 
   /// Creates the database and initializes it.
   Future<AppDatabase> build() async {
-    final path = name != null
+    final String path = name != null
         ? await sqfliteDatabaseFactory.getDatabasePath(name!)
         : ':memory:';
-    final database = _$AppDatabase();
+    final _$AppDatabase database = _$AppDatabase();
     database.database = await database.open(
       path,
       _migrations,
@@ -68,22 +68,22 @@ class _$AppDatabase extends AppDatabase {
     List<Migration> migrations, [
     Callback? callback,
   ]) async {
-    final databaseOptions = sqflite.OpenDatabaseOptions(
+    final sqflite.OpenDatabaseOptions databaseOptions = sqflite.OpenDatabaseOptions(
       version: 1,
-      onConfigure: (database) async {
+      onConfigure: (sqflite.Database database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
       },
-      onOpen: (database) async {
+      onOpen: (sqflite.Database database) async {
         await callback?.onOpen?.call(database);
       },
-      onUpgrade: (database, startVersion, endVersion) async {
+      onUpgrade: (sqflite.Database database, int startVersion, int endVersion) async {
         await MigrationAdapter.runMigrations(
             database, startVersion, endVersion, migrations);
 
         await callback?.onUpgrade?.call(database, startVersion, endVersion);
       },
-      onCreate: (database, version) async {
+      onCreate: (sqflite.Database database, int version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `article` (`id` INTEGER, `author` TEXT, `title` TEXT, `description` TEXT, `url` TEXT, `urlToImage` TEXT, `publishedAt` TEXT, `content` TEXT, PRIMARY KEY (`id`))');
 
@@ -120,7 +120,7 @@ class _$ArticleDao extends ArticleDao {
         _articleModelDeletionAdapter = DeletionAdapter(
             database,
             'article',
-            ['id'],
+            <String>['id'],
             (ArticleModel item) => <String, Object?>{
                   'id': item.id,
                   'author': item.author,
