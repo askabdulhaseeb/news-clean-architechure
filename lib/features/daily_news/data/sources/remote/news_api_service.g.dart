@@ -11,9 +11,10 @@ part of 'news_api_service.dart';
 class _NewsApiService implements NewsApiService {
   _NewsApiService(
     this._dio, {
-    this.baseUrl,
+    String? baseURL,
   }) {
-    baseUrl ??= 'https://newsapi.org/v2';
+    baseUrl = baseURL ?? 'https://newsapi.org/v2';
+    _dio.options.baseUrl = baseUrl ?? baseURL!;
   }
 
   final Dio _dio;
@@ -25,35 +26,41 @@ class _NewsApiService implements NewsApiService {
     String? apiKey,
     String? country,
   }) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
+    log('Start news api: ${_dio.options.baseUrl} ...');
+    const Map<String, dynamic> _extra = <String, dynamic>{};
+    final Map<String, dynamic> queryParameters = <String, dynamic>{
       r'apiKey': apiKey,
       r'country': country,
     };
-    queryParameters.removeWhere((k, v) => v == null);
-    final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<ArticleModel>>>(Options(
+    queryParameters.removeWhere((String k, v) => v == null);
+    final Map<String, dynamic> _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final Response<Map<String, dynamic>> _result =
+        await _dio.fetch<Map<String, dynamic>>(
+            _setStreamType<HttpResponse<List<ArticleModel>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              '/top-headlines',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    var value = _result.data!
-        .map((dynamic i) => ArticleModel.fromJson(i as Map<String, dynamic>))
+                .compose(
+                  _dio.options,
+                  '/top-headlines',
+                  queryParameters: queryParameters,
+                  data: _data,
+                )
+                .copyWith(
+                    baseUrl: _combineBaseUrls(
+                  _dio.options.baseUrl,
+                  baseUrl,
+                ))));
+    log('Respond Done...');
+    List<ArticleModel> value = _result.data!['articles']
+        .map<ArticleModel>(
+            (dynamic i) => ArticleModel.fromJson(i as Map<String, dynamic>))
         .toList();
-    final httpResponse = HttpResponse(value, _result);
+    final HttpResponse<List<ArticleModel>> httpResponse =
+        HttpResponse<List<ArticleModel>>(value, _result);
+    log('API Done...');
     return httpResponse;
   }
 
@@ -78,7 +85,7 @@ class _NewsApiService implements NewsApiService {
       return dioBaseUrl;
     }
 
-    final url = Uri.parse(baseUrl);
+    final Uri url = Uri.parse(baseUrl);
 
     if (url.isAbsolute) {
       return url.toString();

@@ -25,9 +25,10 @@ class ArticleModel extends ArticleEntity {
         );
 
   factory ArticleModel.fromJson(Map<String, dynamic> map) {
-    print(map['author'] ?? 'author');
+    final int id = map['id'] ?? DateTime.now().millisecondsSinceEpoch;
+    print(id);
     return ArticleModel(
-      id: map['id'] ?? '',
+      id: id,
       author: map['author'] ?? '',
       title: map['title'] ?? '',
       description: map['description'] ?? '',

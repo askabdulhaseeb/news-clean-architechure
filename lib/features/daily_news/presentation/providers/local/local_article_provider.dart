@@ -10,10 +10,8 @@ class LocalArticleProvider extends ChangeNotifier {
     this._getSavedArticleUseCase,
     this._saveArticleUseCase,
     this._removeArticleUseCase,
-  ) {
-    _updateLoading(false);
-  }
-  
+  );
+
   final GetSavedArticleUseCase _getSavedArticleUseCase;
   final SaveArticleUseCase _saveArticleUseCase;
   final RemoveArticleUseCase _removeArticleUseCase;
@@ -22,6 +20,9 @@ class LocalArticleProvider extends ChangeNotifier {
   List<ArticleEntity> articles = <ArticleEntity>[];
 
   bool get isLoading => _isLoading;
+  GetSavedArticleUseCase get getSavedArticleUseCase => _getSavedArticleUseCase;
+  SaveArticleUseCase get saveArticleUseCase => _saveArticleUseCase;
+  RemoveArticleUseCase get removeArticleUseCase => _removeArticleUseCase;
 
   void _updateLoading(bool value) {
     _isLoading = value;
